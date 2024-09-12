@@ -12,7 +12,7 @@ export class UserService {
   ) {}
 
   async findAll() {
-    return { success: true, msg: 'FindAll' };
+    return await this.usersRepository.find();
   }
 
   async create(createUserDto: CreateUserDto) {
@@ -23,7 +23,7 @@ export class UserService {
     if (user) {
       throw new ConflictException(`User with Email "${email}" already Exists`);
     }
-    user = await this.usersRepository.create({
+    user = this.usersRepository.create({
       ...createUserDto,
     });
     return this.usersRepository.save(user);

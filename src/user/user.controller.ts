@@ -10,7 +10,9 @@ export class UserController {
 
   @Get()
   async findAll() {
-    return this.userService.findAll();
+    const users = this.userService.findAll();
+    const usersResponse = plainToClass(UserResponseDto, users);
+    return usersResponse;
   }
 
   @Post()
