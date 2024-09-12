@@ -15,8 +15,7 @@ export class UserController {
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
-    console.log(createUserDto);
-    const user = this.userService.create();
+    const user = this.userService.create(createUserDto);
     const userResponse = plainToClass(UserResponseDto, user);
     return userResponse;
   }
