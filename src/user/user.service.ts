@@ -7,6 +7,11 @@ export class UserService {
   }
 
   create() {
-    return { success: true, msg: 'Create User' };
+    const user = {
+      id: 1,
+      username: 'john',
+      email: 'john@example.com',
+    };
+    return user;
   }
 }

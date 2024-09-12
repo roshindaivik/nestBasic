@@ -1,6 +1,8 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './user.validator';
+import { plainToClass } from 'class-transformer';
+import { UserResponseDto } from './user-response.dto';
 
 @Controller('user')
 export class UserController {
@@ -14,6 +16,8 @@ export class UserController {
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     console.log(createUserDto);
-    return this.userService.create();
+    const user = this.userService.create();
+    const userResponse = plainToClass(UserResponseDto, user);
+    return userResponse;
   }
 }
