@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { TodoModule } from './todo/todo.module';
+import { RediscacheModule } from './rediscache/rediscache.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { TodoModule } from './todo/todo.module';
     UserModule,
     AuthModule,
     TodoModule,
+    RediscacheModule,
   ],
   controllers: [AppController],
   providers: [AppService],

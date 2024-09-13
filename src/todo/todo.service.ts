@@ -5,12 +5,14 @@ import { Repository } from 'typeorm';
 import { User } from 'src/user/user.entity';
 import { CreateTodoDTO } from './create-todo.dto';
 import { UpdateTodoDTO } from './update-todo.dts';
+import { RediscacheService } from 'src/rediscache/rediscache.service';
 
 @Injectable()
 export class TodoService {
   constructor(
     @InjectRepository(Todo)
     private todoRepository: Repository<Todo>,
+    private redisCacheService: RediscacheService,
   ) {}
 
   async createTodo(user: User, createTodoDTO: CreateTodoDTO) {
@@ -22,11 +24,19 @@ export class TodoService {
   }
 
   async fetchTodos(user: User) {
+    const userId = user.id;
+    const redisKey = `todos:${userId}`;
+    const cacheResult = await this.redisCacheService.get(redisKey);
+    if (cacheResult) {
+      return JSON.parse(cacheResult);
+    }
     const todos = await this.todoRepository
       .createQueryBuilder('todo')
       .innerJoinAndSelect('todo.user', 'user')
-      .where('user.id = :userId', { userId: user.id })
+      .where('user.id = :userId', { userId })
       .getMany();
+
+    await this.redisCacheService.set(redisKey, JSON.stringify(todos));
     return todos;
   }
 
